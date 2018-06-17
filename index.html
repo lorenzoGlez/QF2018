@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Acme Product Management</title>
+
+    <!-- Style sheets -->
+    <link href="styles/bootstrap.css" rel="stylesheet" />
+</head>
+
+<body ng-app="fifa">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div>
+                <div class="navbar-brand">Quiniela Fifa Rusia 2018</div>
+            </div>
+            <div class="navbar-right">
+                <div class="navbar-brand" >
+                    <a id="btnPartidos" class="btn btn-primary" href="#gameList/">Partidos</a>
+                </div>
+                <div class="navbar-brand" >
+                    <a id="btnEstadsticas" class="btn btn-primary" href="#teamList/">Estadísticas</a>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <ng-view></ng-view>
+    </div>
+
+    <!-- Library Scripts -->
+    <script src="scripts/angular.js"></script>
+    <script src="scripts/angular-resource.js"></script>
+    <script src="scripts/angular-mocks.js"></script>
+    <script src="scripts/angular-route.js"></script>
+
+    <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+    <script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
+
+    <!-- Application Script -->
+    <script src="src/app.js"></script>
+    <script src="src/app/common/common.js"></script>
+
+    <!-- Domain Classes -->
+    <script src="src/app/games/game.js"></script>
+    <script src="src/app/teams/teams.js"></script>
+    
+    <!-- Services -->
+    <script src="src/services/dataAccessService.js"></script>
+    <script src="src/services/gameResourceMock.js"></script>
+    <script src="src/services/services.js"></script>
+    
+    <script src="src/app/employees/employeeDataAccessService.js"></script>
+
+    <!-- Controllers -->
+    <script src="src/app/games/gameListCtrl.js"></script>
+    <script src="src/app/games/gameDetailCtrl.js"></script>
+
+    <script src="src/app/employees/employeeListCtrl.js"></script>
+
+    <script src="src/app/teams/teamListCtrl.js"></script>
+
+    
+</body>
+
+</html>

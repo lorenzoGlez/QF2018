@@ -1,0 +1,32 @@
+<div class="panel panel-primary" style="padding-top: 60px;">
+    <div class="panel-heading"
+         style="font-size:large">{{::vm.title}} ({{vm.getTotalGames()}})
+         <div style="float: right;"><input class="text-primary" type="text" ng-model="vm.filterGames" ></input> </div>
+    </div>
+
+    <div class="panel-body">
+        <table class="table">
+
+            <thead>
+            <tr>
+                <td>Fecha</td>
+                <td>Status</td>
+                <td class="text-right">Local</td>
+                <td class="text-center">Goles</td>
+                <td>Visitante</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-class="{'breadcrumb': game.status == 'FINISHED','btn-warning': game.status == 'IN-PLAY'}" ng-repeat="game in vm.games | filter: vm.filterGames" ng-if="game.homeTeamName !='' ">
+                <td>
+                    {{ game.date | date: "EEE MM/dd HH:mm" }}
+                </td>
+                <td>{{ game.status }}</td>
+                <td class="text-right" ng-style="(game.result.goalsHomeTeam > game.result.goalsAwayTeam) ? {'font-weight':'bold'}:{}"><div class="badge">{{game.homeOwner}}</div>   {{ game.homeTeamName }}</td>
+                <td class="text-center">{{ game.result.goalsHomeTeam }} - {{ game.result.goalsAwayTeam }}</td>
+                <td ng-style="(game.result.goalsHomeTeam < game.result.goalsAwayTeam) ? {'font-weight':'bold'}:{}">{{ game.awayTeamName }}   <div class="badge">{{game.awayOwner}}</div> </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

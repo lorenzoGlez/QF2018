@@ -1,0 +1,42 @@
+<div class="panel panel-primary">
+    <div class="panel-heading" style="font-size:large">
+        {{::vm.title}}
+    </div>
+
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-2">Date:</div>
+                    <div class="col-md-6">{{ vm.game.date | date }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">Home Team (goals):</div>
+                    <div class="col-md-6">{{ vm.game.homeTeamName }} ({{vm.game.result.goalsHomeTeam}})</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">Away Team (goals):</div>
+                    <div class="col-md-6">{{ vm.game.awayTeamName }} ({{vm.game.result.goalsAwayTeam}})</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">href:</div>
+                    <div class="col-md-6">{{vm.game.self.href }}</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <img class="center-block img-responsive"
+                     style="width:200px;margin:2px;"
+                     ng-src="{{vm.product.imageUrl}}"
+                     title="{{vm.product.productName}}">
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-default"
+           ng-href="#productList"
+           style="width:80px">
+            < Back
+        </a>
+    </div>
+</div>

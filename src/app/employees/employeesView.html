@@ -1,0 +1,18 @@
+<div >
+        <h1>Reading external Json file</h1>
+        <h2>Total Employees {{ vm.getTotalEmployees() }}</h2>
+        <label>Add Name</label><input type="text" ng-model="vm.Name">
+        <label>Add City</label><input type="text" ng-model="vm.City">
+        <label>Add State</label><input type="text" ng-model="vm.State">
+        <button class="btn" ng-click="vm.addEmp()">Add <i class="icon-plus"></i></button>
+    <br /><br />
+            <label>Search</label>    <input type="text" ng-model="vm.search.name">
+            
+        <table class="table table-striped">
+            <tr ng-repeat="resource in vm.employees">
+                <td>{{ resource.name }}</td>
+                <td>{{ resource.city }}</td>
+                <td>{{ resource.state }}</td>
+            </tr>    
+        </table>
+      </div>

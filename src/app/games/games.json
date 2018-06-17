@@ -1,0 +1,44 @@
+[
+  {
+    "self": {
+      "href": "http://api.football-data.org/v1/fixtures/165069"
+    },
+    "date": "2018-06-14T15:00:00Z",
+    "staus": "TIMED",
+    "homeTeamName": "Russia-X",
+    "awayTeamName": "SaudiArabia",
+    "result": {
+      "goalsHomeTeam": 1,
+      "goalsAwayTeam": 0
+    },
+    "getId": "165069"
+  },
+  {
+    "self": {
+      "href": "http://api.football-data.org/v1/fixtures/165084"
+    },
+    "date": "2018-06-15T12:00:00Z",
+    "staus": "TIMED",
+    "homeTeamName": "Egypt",
+    "awayTeamName": "SaudiArabiaUruguay",
+    "result": {
+      "goalsHomeTeam": 2,
+      "goalsAwayTeam": 4
+    },
+    "getId": "165084"
+  },
+  {
+    "self": {
+      "href": "http://api.football-data.org/v1/fixtures/165083"
+    },
+    "date": "2018-06-15T15:00:00Z",
+    "staus": "TIMED",
+    "homeTeamName": "Morocco",
+    "awayTeamName": "Iran",
+    "result": {
+      "goalsHomeTeam": null,
+      "goalsAwayTeam": null
+    },
+    "getId": "165083"
+  }
+]

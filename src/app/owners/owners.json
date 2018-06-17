@@ -1,0 +1,82 @@
+[
+  {
+  "ownerName": "Chuy",
+  "quiniela": 400,
+  "teams": ["Germany", "Denmark", "Iran","Nigeria"]
+  },
+  {
+  "ownerName": "Asa & Maqueda",
+  "quiniela": 400,
+  "teams": ["Argentina", "Mexico", "Panama","Peru"]
+  },
+  {
+  "ownerName": "Christian",
+  "quiniela": 400,
+  "teams": ["Brazil", "Egypt", "Iceland", "Senegal"]
+  },
+  {
+  "ownerName": "Erik",
+  "quiniela": 400,
+  "teams": ["Belgium", "Portugal", "Russia", "Serbia"]
+  },
+  {
+  "ownerName": "Juan",
+  "quiniela": 400,
+  "teams": ["Australia", "Croatia", "Morocco", "Uruguay"]
+  },
+  {
+  "ownerName": "Lorenzo",
+  "quiniela": 400,
+  "teams": ["Colombia", "Korea Republic", "France", "Japan"]
+  },
+  {
+  "ownerName": "Luis",
+  "quiniela": 400,
+  "teams": ["Saudi Arabia", "Costa Rica","Spain", "Switzerland"]
+  },
+  {
+  "ownerName": "Mike & Ramon",
+  "quiniela": 400,
+  "teams": ["England", "Poland", "Sweden", "Tunisia"]
+  },
+  {
+  "ownerName": "Benru",
+  "quiniela": 200,
+  "teams": ["Spain",  "Costa Rica",  "Nigeria",  "Panama"]
+  },
+  {
+  "ownerName": "Cepis",
+  "quiniela": 200,
+  "teams": ["Argentina",  "Mexico",  "Serbia",  "Egypt"]
+  },
+  {
+  "ownerName": "Chacho",
+  "quiniela": 200,
+  "teams": ["Germany",  "Portugal",  "Poland",  "Senegal"]
+  },
+  {
+  "ownerName": "Jaime",
+  "quiniela": 200,
+  "teams": ["Uruguay",  "Croatia",  "Colombia",  "Tunisia"]
+  },
+  {
+  "ownerName": "JB",
+  "quiniela": 200,
+  "teams": ["Denmark",  "Switzerland",  "Russia",  "Saudi Arabia"]
+  },
+  {
+  "ownerName": "Jocha",
+  "quiniela": 200,
+  "teams": ["Brazil",  "Japan",  "Iran",  "Korea Republic"]
+  },
+  {
+  "ownerName": "Lencho",
+  "quiniela": 200,
+  "teams": ["France",  "Belgium",  "Peru",  "Morocco"]
+  },
+  {
+  "ownerName": "Tirus",
+  "quiniela": 200,
+  "teams": ["Australia",  "England",  "Sweden",  "Iceland"]
+  }
+]

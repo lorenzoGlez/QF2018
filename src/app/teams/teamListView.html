@@ -1,0 +1,74 @@
+<div class="panel panel-primary">
+    <div class="panel-heading"
+         style="font-size:large">{{::vm.title}}
+    </div>
+
+    <canvas ng-show="vm.isChartVisible" id="mixed-chart" class="chart chart-bar">
+    </canvas>
+
+    <div class="panel-body">
+        <table class="table">
+
+            <thead >
+            <tr class="table-bordered active">
+                <td>
+                    <button type="button"
+                            class="btn btn-primary"
+                            ng-click="vm.showChart()">
+                        {{vm.isChartVisible ? "Hide" : "Show"}} Graph
+                    </button>
+                </td>
+                <td>Grupo</td>
+                <td>Equipo</td>
+                <td >PJ</td>
+                <td >PG</td>
+                <td >PP</td>
+                <td >PE</td>
+                <td >GF</td>
+                <td >GC</td>
+                <td >GD</td>
+                <td>Puntos</td>
+            </tr>
+            </thead>
+            <tbody>
+        <tr ng-repeat-start="owner in vm.owners | orderBy: ['-points','-goals','-goalsDifference']">
+            <td>
+                <a class="btn" ng-click="vm.toggleShowTeams(owner)"> {{owner.ownerName}} </a>
+            </td>
+            <td></td>
+            <td></td>
+            <td>{{owner.playedGames}}</td>            
+            <td>{{owner.wonGames}}</td>
+            <td>{{owner.lostGames}}</td>
+            <td>{{owner.tiedGames}}</td>
+            <td>{{owner.goals}}</td>
+            <td>{{owner.goalsAgainst}}</td>
+            <td>{{owner.goalsDifference}}</td>
+            <td>{{owner.points}}</td>
+        </tr>
+            <tr ng-show="owner.showTeams" ng-repeat="team in owner.teamList | orderBy:['-points','-goals']">
+                <td>
+                    <img ng-if="vm.showImage"
+                         ng-src="{{product.imageUrl}}"
+                         style="width:50px;margin:2px"
+                         title="{{product.productName}}">
+                </td>
+                <td>{{team.group}}</td>
+                <td>
+                        {{ team.team}}
+
+                </td>
+                <td>{{team.playedGames}}</td>
+                <td>{{team.wonGames}}</td>
+                <td>{{team.lostGames}}</td>
+                <td>{{team.tiedGames}}</td>
+                <td>{{team.goals}}</td>
+                <td>{{team.goalsAgainst}}</td>
+                <td>{{team.goalDifference}}</td>
+                <td>{{team.points}}</td>
+            </tr>
+        <tr ng-repeat-end></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
