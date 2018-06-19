@@ -14,7 +14,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Erik"
+        "owner": ""
       },
       {
         "group": "A",
@@ -27,7 +27,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Luis"
+        "owner": ""
       },
       {
         "group": "A",
@@ -40,7 +40,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Christian"
+        "owner": ""
       },
       {
         "group": "A",
@@ -53,7 +53,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Juan"
+        "owner": ""
       }
     ],
     "B": [
@@ -68,7 +68,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Juan"
+        "owner": ""
       },
       {
         "group": "B",
@@ -81,7 +81,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Chuy"
+        "owner": ""
       },
       {
         "group": "B",
@@ -94,7 +94,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Erik"
+        "owner": ""
       },
       {
         "group": "B",
@@ -107,7 +107,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Luis"
+        "owner": ""
       }
     ],
     "C": [
@@ -122,7 +122,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Lorenzo"
+        "owner": ""
       },
       {
         "group": "C",
@@ -135,7 +135,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Juan"
+        "owner": ""
       },
       {
         "group": "C",
@@ -148,7 +148,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Asa & Maqueda"
+        "owner": ""
       },
       {
         "group": "C",
@@ -161,7 +161,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Chuy"
+        "owner": ""
       }
     ],
     "D": [
@@ -176,7 +176,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Asa & Maqueda"
+        "owner": ""
       },
       {
         "group": "D",
@@ -189,7 +189,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Christian"
+        "owner": ""
       },
       {
         "group": "D",
@@ -202,7 +202,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Juan"
+        "owner": ""
       },
       {
         "group": "D",
@@ -215,7 +215,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Chuy"
+        "owner": ""
       }
     ],
     "E": [
@@ -230,7 +230,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Luis"
+        "owner": ""
       },
       {
         "group": "E",
@@ -243,7 +243,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Erik"
+        "owner": ""
       },
       {
         "group": "E",
@@ -256,7 +256,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Christian"
+        "owner": ""
       },
       {
         "group": "E",
@@ -269,7 +269,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Luis"
+        "owner": ""
       }
     ],
     "F": [
@@ -284,7 +284,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Chuy"
+        "owner": ""
       },
       {
         "group": "F",
@@ -297,7 +297,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Asa & Maqueda"
+        "owner": ""
       },
       {
         "group": "F",
@@ -310,7 +310,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Mike & Ramon"
+        "owner": ""
       },
       {
         "group": "F",
@@ -323,7 +323,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Lorenzo"
+        "owner": ""
       }
     ],
     "G": [
@@ -338,7 +338,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Erik"
+        "owner": ""
       },
       {
         "group": "G",
@@ -351,7 +351,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Asa & Maqueda"
+        "owner": ""
       },
       {
         "group": "G",
@@ -364,7 +364,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Mike & Ramon"
+        "owner": ""
       },
       {
         "group": "G",
@@ -377,7 +377,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Mike & Ramon"
+        "owner": ""
       }
     ],
     "H": [
@@ -392,7 +392,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Mike & Ramon"
+        "owner": ""
       },
       {
         "group": "H",
@@ -405,7 +405,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Christian"
+        "owner": ""
       },
       {
         "group": "H",
@@ -418,7 +418,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Lorenzo"
+        "owner": ""
       },
       {
         "group": "H",
@@ -431,7 +431,7 @@
         "goals": 0,
         "goalsAgainst": 0,
         "goalDifference": 0,
-        "owner": "Lorenzo"
+        "owner": ""
       }
     ]
   }

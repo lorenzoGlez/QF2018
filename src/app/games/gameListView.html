@@ -17,7 +17,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-class="{'breadcrumb': game.status == 'FINISHED','btn-warning': game.status == 'IN-PLAY'}" ng-repeat="game in vm.games | filter: vm.filterGames" ng-if="game.homeTeamName !='' ">
+            <tr ng-class="{'breadcrumb': game.status == 'FINISHED','btn-warning': game.status == 'IN_PLAY'}" ng-repeat="game in vm.games | filter: vm.filterGames" ng-if="game.homeTeamName !='' ">
                 <td>
                     {{ game.date | date: "EEE MM/dd HH:mm" }}
                 </td>

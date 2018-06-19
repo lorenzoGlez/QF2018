@@ -13,6 +13,14 @@ module app{
         goals: number;
         goalsAgainst: number;
         goalsDifference: number;
+        nextGame:OwnerNextGame;
+    }
 
+    export class OwnerNextGame{
+        constructor(
+            public myTeam: string,
+            public vsTeam: string,
+            public vsOwner: string,
+            public date: string){}
     }
 }

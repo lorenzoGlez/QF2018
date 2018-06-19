@@ -8,10 +8,10 @@ var app;
                 var _this = this;
                 this.$routeParams = $routeParams;
                 this.dataAccessService = dataAccessService;
+                this.games = [];
                 this.isChartVisible = false;
                 this.title = "Estadísticas";
                 this.teams = [];
-                var games = [];
                 this.price = this.$routeParams.price ? this.$routeParams.price : 400;
                 var teamResource = dataAccessService.getTeamResource();
                 teamResource.get(function (data) {
@@ -25,15 +25,15 @@ var app;
                     _this.teams = _this.teams.concat(data.standings.H);
                     console.log("Standings retrieved");
                 });
-                this.getGamesRaults(dataAccessService, games);
+                this.getGamesRaults(dataAccessService, this.games);
                 app.Common.setButtonsReferences(this.price);
             }
             TeamListCtrl.prototype.getGamesRaults = function (dataAccessService, games) {
                 var _this = this;
                 var gameResource = dataAccessService.getGameResource();
                 gameResource.get(function (data) {
-                    games = data.fixtures;
-                    games.forEach(function (game) {
+                    _this.games = data.fixtures;
+                    _this.games.forEach(function (game) {
                         if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "") {
                             var homeTeam = _this.teams.filter(function (team) {
                                 return team.team == game.homeTeamName;
@@ -55,15 +55,15 @@ var app;
             };
             TeamListCtrl.prototype.calcOwnersResults = function (dataAccessService) {
                 var _this = this;
-                this.charLabels = [];
-                this.charData = [[], [], [], [], []];
+                this.chartLabels = [];
+                this.chartData = [[], [], [], [], []];
                 var ownerResource = dataAccessService.getOwnerResource();
                 ownerResource.query(function (data) {
                     _this.owners = data.filter(function (owner) {
                         return owner.quiniela == _this.price;
                     });
+                    var ownerList = [];
                     _this.owners.forEach(function (owner) {
-                        _this.charLabels.push(owner.ownerName);
                         owner.playedGames = 0;
                         owner.wonGames = 0;
                         owner.lostGames = 0;
@@ -77,6 +77,7 @@ var app;
                             var teamObj = _this.teams.filter(function (team) {
                                 return team.team == teamName;
                             })[0];
+                            teamObj.owner = owner.ownerName;
                             owner.teamList.push(teamObj);
                             owner.playedGames += _this.getNonNull(teamObj.playedGames);
                             owner.lostGames += _this.getNonNull(teamObj.lostGames);
@@ -87,14 +88,61 @@ var app;
                             owner.goalsAgainst += _this.getNonNull(teamObj.goalsAgainst);
                             owner.points += _this.getNonNull(teamObj.points);
                         });
-                        _this.charData[0].push(owner.points);
-                        _this.charData[1].push(owner.goals);
-                        _this.charData[2].push(owner.wonGames);
-                        _this.charData[3].push(owner.lostGames);
-                        _this.charData[4].push(owner.tiedGames);
+                        ownerList.push({
+                            'name': owner.ownerName,
+                            'points': owner.points,
+                            'goals': owner.goals,
+                            'wonGames': owner.wonGames,
+                            'lostGames': owner.lostGames,
+                            'tiedGames': owner.tiedGames,
+                        });
+                    });
+                    ownerList.sort(function (o1, o2) {
+                        var sortResult = o1.points > o2.points ? -1 : 1;
+                        if (o1.points == o2.points) {
+                            sortResult = o1.goals > o2.goals ? -1 : 1;
+                            if (o1.goals == o2.goals) {
+                                sortResult = o1.goalDifference > o2.goalDifference ? -1 : 1;
+                            }
+                        }
+                        return sortResult;
+                    });
+                    ownerList.forEach(function (owner) {
+                        var ownerObj = _this.owners.filter(function (ow) {
+                            return ow.ownerName == owner.name;
+                        })[0];
+                        _this.setNextGame(ownerObj, owner.name);
+                        _this.chartLabels.push(owner.name);
+                        _this.chartData[0].push(owner.points);
+                        _this.chartData[1].push(owner.goals);
+                        _this.chartData[2].push(owner.wonGames);
+                        _this.chartData[3].push(owner.lostGames);
+                        _this.chartData[4].push(owner.tiedGames);
                     });
                     console.log("Owners retrieved");
                 });
+            };
+            TeamListCtrl.prototype.setNextGame = function (owner, ownerName) {
+                var _this = this;
+                this.games.forEach(function (game) {
+                    if (owner.nextGame == null && game.status == "TIMED") {
+                        var homeOwner = _this.getOwnerName(game.homeTeamName);
+                        var awayOwner = _this.getOwnerName(game.awayTeamName);
+                        if (homeOwner == ownerName) {
+                            owner.nextGame = new app.OwnerNextGame(game.homeTeamName, game.awayTeamName, awayOwner, game.date);
+                        }
+                        else {
+                            if (awayOwner == ownerName) {
+                                owner.nextGame = new app.OwnerNextGame(game.awayTeamName, game.homeTeamName, homeOwner, game.date);
+                            }
+                        }
+                    }
+                });
+            };
+            TeamListCtrl.prototype.getOwnerName = function (teamName) {
+                return this.teams.filter(function (team) {
+                    return team.team == teamName;
+                })[0].owner;
             };
             TeamListCtrl.prototype.getNonNull = function (value) {
                 return value ? value : 0;
@@ -104,13 +152,13 @@ var app;
                     var statsChart = new Chart(app.Common.getElementById('mixed-chart'), {
                         type: 'bar',
                         data: {
-                            labels: this.charLabels,
+                            labels: this.chartLabels,
                             datasets: [{
                                     label: "Puntos",
                                     type: "bar",
                                     //borderColor: "lightgray",
                                     //backgroundColor: "lightblue",                        
-                                    data: this.charData[0],
+                                    data: this.chartData[0],
                                     yAxisID: "first-y-axis",
                                 },
                                 {
@@ -121,7 +169,7 @@ var app;
                                     borderColor: "black",
                                     backgroundColor: "white",
                                     pointBackgroundColor: 'red',
-                                    data: this.charData[1],
+                                    data: this.chartData[1],
                                     yAxisID: "first-y-axis"
                                 },
                                 {
@@ -129,7 +177,7 @@ var app;
                                     type: "line",
                                     borderColor: "red",
                                     backgroundColor: "tomato",
-                                    data: this.charData[3],
+                                    data: this.chartData[3],
                                     fill: true,
                                     yAxisID: "first-y-axis"
                                 },
@@ -138,7 +186,7 @@ var app;
                                     type: "line",
                                     borderColor: "orange",
                                     backgroundColor: "yellow",
-                                    data: this.charData[4],
+                                    data: this.chartData[4],
                                     fill: true,
                                     yAxisID: "first-y-axis"
                                 },
@@ -147,7 +195,7 @@ var app;
                                     type: "line",
                                     borderColor: "green",
                                     backgroundColor: "lightgreen",
-                                    data: this.charData[2],
+                                    data: this.chartData[2],
                                     fill: true,
                                     yAxisID: "first-y-axis"
                                 }
@@ -189,47 +237,68 @@ var app;
                     });
                 }
                 this.isChartVisible = !this.isChartVisible;
+                //this.showChartSample()
             };
-            TeamListCtrl.prototype.sampleChart = function () {
-                var char = new Chart(document.getElementById("bar"), {
+            TeamListCtrl.prototype.showChartSample = function () {
+                var barChartData = {
+                    labels: this.chartLabels,
+                    datasets: [{
+                            type: 'bubble',
+                            label: 'Goles a Favor',
+                            borderColor: "black",
+                            backgroundColor: "white",
+                            borderWidth: 4,
+                            pointRadius: 20,
+                            data: this.chartData[1]
+                        }, {
+                            type: 'bar',
+                            label: 'P. Perdidos',
+                            //borderColor: "red",
+                            backgroundColor: "tomato",
+                            data: this.chartData[3]
+                        }, {
+                            type: 'bar',
+                            label: 'P. Empatados',
+                            //borderColor: "orange",
+                            backgroundColor: "yellow",
+                            data: this.chartData[4]
+                        }, {
+                            type: 'bar',
+                            label: 'P. Ganados',
+                            //borderColor: "green",
+                            backgroundColor: "lightgreen",
+                            data: this.chartData[2]
+                        }]
+                };
+                var myBar = new Chart(app.Common.getElementById('barChart'), {
                     type: 'bar',
-                    data: {
-                        labels: ["1901", "1950", "1999", "2050"],
-                        datasets: [{
-                                label: "Europe",
-                                type: "line",
-                                borderColor: "#8e5ea2",
-                                data: [408, 547, 675, 734],
-                                fill: true
-                            }, {
-                                label: "Africa",
-                                type: "line",
-                                borderColor: "#3e95cd",
-                                data: [133, 221, 783, 2478],
-                                fill: false
-                            }, {
-                                label: "Europe",
-                                type: "bar",
-                                backgroundColor: "rgba(0,0,0,0.2)",
-                                data: [408, 547, 675, 734],
-                            }, {
-                                label: "Africa",
-                                type: "bar",
-                                backgroundColor: "rgba(0,0,0,0.2)",
-                                backgroundColorHover: "#3e95cd",
-                                data: [133, 221, 783, 2478]
-                            }
-                        ]
-                    },
+                    data: barChartData,
                     options: {
                         title: {
                             display: true,
-                            text: 'Population growth (millions): Europe & Africa'
+                            text: 'Chart.js Bar Chart - Stacked'
                         },
-                        legend: { display: false }
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                                    stacked: true,
+                                }],
+                            yAxes: [{
+                                    stacked: true
+                                }]
+                        },
+                        legend: { display: true }
                     }
                 });
             };
+            TeamListCtrl.prototype.randomScalingFactor = function () {
+                return Math.round(Date.now());
+            };
+            ;
             TeamListCtrl.prototype.toggleShowTeams = function (owner) {
                 owner.showTeams = !owner.showTeams;
             };
@@ -264,8 +333,6 @@ var app;
                 }
             };
             TeamListCtrl.prototype.getTotalTeams = function () {
-                //console.log(JSON.stringify(this.games));
-                //console.log(this.teams);
                 return this.teams.length;
             };
             TeamListCtrl.$inject = ["$routeParams", "dataAccessService"];

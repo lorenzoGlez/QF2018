@@ -6,6 +6,9 @@
     <canvas ng-show="vm.isChartVisible" id="mixed-chart" class="chart chart-bar">
     </canvas>
 
+    <canvas ng-show="false" id="barChart" class="chart chart-bar">
+    </canvas>
+
     <div class="panel-body">
         <table class="table">
 
@@ -32,11 +35,15 @@
             </thead>
             <tbody>
         <tr ng-repeat-start="owner in vm.owners | orderBy: ['-points','-goals','-goalsDifference']">
-            <td>
+            <td colspan="3">
                 <a class="btn" ng-click="vm.toggleShowTeams(owner)"> {{owner.ownerName}} </a>
+                <span class="text-muted">{{owner.nextGame.myTeam}} vs </span>
+                <span class="text-muted">{{owner.nextGame.vsTeam}}</span>
+                <span class="badge">{{owner.nextGame.vsOwner}}</span>
+                <span class="text-muted">{{owner.nextGame.date | date: "EEE HH:mm"}}</span>
             </td>
-            <td></td>
-            <td></td>
+
+
             <td>{{owner.playedGames}}</td>            
             <td>{{owner.wonGames}}</td>
             <td>{{owner.lostGames}}</td>

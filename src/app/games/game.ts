@@ -25,6 +25,7 @@ module app{
             goalsAwayTeam: number
         }
     }
+    
 
     export class Game implements IGame {
         
