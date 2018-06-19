@@ -28,6 +28,6 @@ var app;
             templateUrl: "src/app/games/teamDetailView.html",
             controller: "TeamDetailCtrl as vm"
         })
-            .otherwise("/gameList");
+            .otherwise({ redirectTo: "/gameList" });
     }
 })(app || (app = {}));

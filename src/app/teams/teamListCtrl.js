@@ -120,6 +120,7 @@ var app;
                         _this.chartData[4].push(owner.tiedGames);
                     });
                     console.log("Owners retrieved");
+                    _this.showChart();
                 });
             };
             TeamListCtrl.prototype.setNextGame = function (owner, ownerName) {
@@ -148,7 +149,8 @@ var app;
                 return value ? value : 0;
             };
             TeamListCtrl.prototype.showChart = function () {
-                if (!this.isChartVisible) {
+                this.isChartVisible = !this.isChartVisible;
+                if (this.isChartVisible) {
                     var statsChart = new Chart(app.Common.getElementById('mixed-chart'), {
                         type: 'bar',
                         data: {
@@ -236,7 +238,6 @@ var app;
                         }
                     });
                 }
-                this.isChartVisible = !this.isChartVisible;
                 //this.showChartSample()
             };
             TeamListCtrl.prototype.showChartSample = function () {

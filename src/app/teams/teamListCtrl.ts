@@ -160,6 +160,8 @@ module app.teamList{
                 })
 
                 console.log("Owners retrieved")
+
+                this.showChart();
             }); 
 
         }
@@ -194,7 +196,8 @@ module app.teamList{
         }
 
         private showChart(){
-            if (!this.isChartVisible){
+            this.isChartVisible = !this.isChartVisible;
+            if (this.isChartVisible){
                 var statsChart = new Chart(Common.getElementById('mixed-chart'),{
                     type: 'bar',
                     data: {
@@ -285,7 +288,7 @@ module app.teamList{
                 }); 
                 
             }
-            this.isChartVisible = !this.isChartVisible;
+            
             //this.showChartSample()
         }
 
