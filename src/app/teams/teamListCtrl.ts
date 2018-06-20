@@ -198,8 +198,8 @@ module app.teamList{
         private showChart(){
             this.isChartVisible = !this.isChartVisible;
             if (this.isChartVisible){
-                var statsChart = new Chart(Common.getElementById('mixed-chart'),{
-                    type: 'bar',
+                var statsChart = new Chart(Common.getCanvasContext('mixed-chart'),{
+                    type: 'bar',showToolTips: true,
                     data: {
                         labels: this.chartLabels,
                         datasets: [{
@@ -266,8 +266,8 @@ module app.teamList{
                             stacked: true,
                             type: 'linear',
                             position: "right",
-                            ticks:{
-                                stepSize: 2
+                            ticks: {
+                                //stepSize: 2
                             },
                             scaleLabel:{ 
                                 labelString: "Goles",
@@ -325,7 +325,7 @@ module app.teamList{
                     }]
         
                 };            
-                var myBar = new Chart(Common.getElementById('barChart'), {
+                var myBar = new Chart(Common.getCanvasContext('barChart'), {
                     type: 'bar',
                     data: barChartData,
                     options: {

@@ -151,8 +151,8 @@ var app;
             TeamListCtrl.prototype.showChart = function () {
                 this.isChartVisible = !this.isChartVisible;
                 if (this.isChartVisible) {
-                    var statsChart = new Chart(app.Common.getElementById('mixed-chart'), {
-                        type: 'bar',
+                    var statsChart = new Chart(app.Common.getCanvasContext('mixed-chart'), {
+                        type: 'bar', showToolTips: true,
                         data: {
                             labels: this.chartLabels,
                             datasets: [{
@@ -219,7 +219,7 @@ var app;
                                         type: 'linear',
                                         position: "right",
                                         ticks: {
-                                            stepSize: 2
+                                        //stepSize: 2
                                         },
                                         scaleLabel: {
                                             labelString: "Goles",
@@ -271,7 +271,7 @@ var app;
                             data: this.chartData[2]
                         }]
                 };
-                var myBar = new Chart(app.Common.getElementById('barChart'), {
+                var myBar = new Chart(app.Common.getCanvasContext('barChart'), {
                     type: 'bar',
                     data: barChartData,
                     options: {

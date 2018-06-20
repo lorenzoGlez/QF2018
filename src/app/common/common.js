@@ -12,6 +12,11 @@ var app;
         Common.getElementById = function (id) {
             return document.getElementById(id);
         };
+        Common.getCanvasContext = function (elementId) {
+            var canvas = Common.getElementById(elementId);
+            var ctx = canvas.getContext("2d");
+            return ctx;
+        };
         return Common;
     }());
     app.Common = Common;

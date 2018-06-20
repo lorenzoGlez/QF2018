@@ -18,7 +18,7 @@
                     <button type="button"
                             class="btn btn-primary"
                             ng-click="vm.showChart()">
-                        {{vm.isChartVisible ? "Hide" : "Show"}} Graph
+                        {{vm.isChartVisible ? "Ocultar" : "Mostrar"}} Graph
                     </button>
                 </td>
                 <td>Grupo</td>
@@ -36,11 +36,15 @@
             <tbody>
         <tr ng-repeat-start="owner in vm.owners | orderBy: ['-points','-goals','-goalsDifference']">
             <td colspan="3">
-                <a class="btn" ng-click="vm.toggleShowTeams(owner)"> {{owner.ownerName}} </a>
-                <span class="text-muted">{{owner.nextGame.myTeam}} vs </span>
-                <span class="text-muted">{{owner.nextGame.vsTeam}}</span>
-                <span class="badge">{{owner.nextGame.vsOwner}}</span>
-                <span class="text-muted">{{owner.nextGame.date | date: "EEE HH:mm"}}</span>
+                <div style="float:left">
+                    <a class="btn" ng-click="vm.toggleShowTeams(owner)"> {{owner.ownerName}} </a>
+                </div>
+                <div style="float: right;">
+                    <i class="text-muted">{{owner.nextGame.myTeam}} vs
+                        {{owner.nextGame.vsTeam}}</i>
+                    <i class="badge">{{owner.nextGame.vsOwner}}</i>
+                    <i class="text-muted">{{owner.nextGame.date | date: "EEE HH:mm"}}</i>
+                </div>
             </td>
 
 
