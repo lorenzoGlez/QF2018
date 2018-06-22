@@ -9,7 +9,9 @@ var app;
                 this.$routeParams = $routeParams;
                 this.dataAccessService = dataAccessService;
                 this.games = [];
+                this.chartSeries = new app.ChartSeries();
                 this.isChartVisible = false;
+                this.ownerListCtrl = new app.ownerList.OwnerListCtrl(this.dataAccessService);
                 this.title = "Estadísticas";
                 this.teams = [];
                 this.price = this.$routeParams.price ? this.$routeParams.price : 400;
@@ -42,7 +44,7 @@ var app;
                                 return team.team == game.awayTeamName;
                             })[0];
                             if (homeTeam && awayTeam) {
-                                _this.playGame(homeTeam, awayTeam, game);
+                                _this.updateTeamStats(homeTeam, awayTeam, game);
                             }
                             else {
                                 console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
@@ -50,13 +52,33 @@ var app;
                         }
                     });
                     console.log("Games retrieved");
+                    _this.rankTeams();
                     _this.calcOwnersResults(dataAccessService);
                 });
             };
+            TeamListCtrl.prototype.rankTeams = function () {
+                this.teams.sort(function (s1, s2) {
+                    var sortResult = s1.group < s2.group ? -1 : 1;
+                    if (s1.group == s2.group) {
+                        sortResult = s1.points > s2.points ? -1 : 1;
+                        if (s1.points == s2.points) {
+                            sortResult = s1.goals > s2.goals ? -1 : 1;
+                            if (s1.goals == s2.goals) {
+                                sortResult = s1.goalDifference > s2.goalDifference ? -1 : 1;
+                            }
+                        }
+                    }
+                    return sortResult;
+                });
+                for (var index = 0; index < this.teams.length; index += 4) {
+                    this.teams[index].rank = 1;
+                    this.teams[index + 1].rank = 2;
+                    this.teams[index + 2].eliminated = this.teams[index + 2].playedGames > 2;
+                    this.teams[index + 3].eliminated = this.teams[index + 3].playedGames > 2;
+                }
+            };
             TeamListCtrl.prototype.calcOwnersResults = function (dataAccessService) {
                 var _this = this;
-                this.chartLabels = [];
-                this.chartData = [[], [], [], [], []];
                 var ownerResource = dataAccessService.getOwnerResource();
                 ownerResource.query(function (data) {
                     _this.owners = data.filter(function (owner) {
@@ -79,14 +101,14 @@ var app;
                             })[0];
                             teamObj.owner = owner.ownerName;
                             owner.teamList.push(teamObj);
-                            owner.playedGames += _this.getNonNull(teamObj.playedGames);
-                            owner.lostGames += _this.getNonNull(teamObj.lostGames);
-                            owner.wonGames += _this.getNonNull(teamObj.wonGames);
-                            owner.tiedGames += _this.getNonNull(teamObj.tiedGames);
-                            owner.goals += _this.getNonNull(teamObj.goals);
-                            owner.goalsDifference += _this.getNonNull(teamObj.goalDifference);
-                            owner.goalsAgainst += _this.getNonNull(teamObj.goalsAgainst);
-                            owner.points += _this.getNonNull(teamObj.points);
+                            owner.playedGames += app.Common.getZeroIfNull(teamObj.playedGames);
+                            owner.lostGames += app.Common.getZeroIfNull(teamObj.lostGames);
+                            owner.wonGames += app.Common.getZeroIfNull(teamObj.wonGames);
+                            owner.tiedGames += app.Common.getZeroIfNull(teamObj.tiedGames);
+                            owner.goals += app.Common.getZeroIfNull(teamObj.goals);
+                            owner.goalsDifference += app.Common.getZeroIfNull(teamObj.goalDifference);
+                            owner.goalsAgainst += app.Common.getZeroIfNull(teamObj.goalsAgainst);
+                            owner.points += app.Common.getZeroIfNull(teamObj.points);
                         });
                         ownerList.push({
                             'name': owner.ownerName,
@@ -111,56 +133,31 @@ var app;
                         var ownerObj = _this.owners.filter(function (ow) {
                             return ow.ownerName == owner.name;
                         })[0];
-                        _this.setNextGame(ownerObj, owner.name);
-                        _this.chartLabels.push(owner.name);
-                        _this.chartData[0].push(owner.points);
-                        _this.chartData[1].push(owner.goals);
-                        _this.chartData[2].push(owner.wonGames);
-                        _this.chartData[3].push(owner.lostGames);
-                        _this.chartData[4].push(owner.tiedGames);
+                        app.Common.setNextGame(_this.teams, _this.games, ownerObj, owner.name);
+                        _this.chartSeries.addLabel(owner.name);
+                        _this.chartSeries.addPoints(owner.points);
+                        _this.chartSeries.addGoals(owner.goals);
+                        _this.chartSeries.addWonGames(owner.wonGames);
+                        _this.chartSeries.addLostGames(owner.lostGames);
+                        _this.chartSeries.addTiedGames(owner.tiedGames);
                     });
                     console.log("Owners retrieved");
                     _this.showChart();
                 });
             };
-            TeamListCtrl.prototype.setNextGame = function (owner, ownerName) {
-                var _this = this;
-                this.games.forEach(function (game) {
-                    if (owner.nextGame == null && game.status == "TIMED") {
-                        var homeOwner = _this.getOwnerName(game.homeTeamName);
-                        var awayOwner = _this.getOwnerName(game.awayTeamName);
-                        if (homeOwner == ownerName) {
-                            owner.nextGame = new app.OwnerNextGame(game.homeTeamName, game.awayTeamName, awayOwner, game.date);
-                        }
-                        else {
-                            if (awayOwner == ownerName) {
-                                owner.nextGame = new app.OwnerNextGame(game.awayTeamName, game.homeTeamName, homeOwner, game.date);
-                            }
-                        }
-                    }
-                });
-            };
-            TeamListCtrl.prototype.getOwnerName = function (teamName) {
-                return this.teams.filter(function (team) {
-                    return team.team == teamName;
-                })[0].owner;
-            };
-            TeamListCtrl.prototype.getNonNull = function (value) {
-                return value ? value : 0;
-            };
             TeamListCtrl.prototype.showChart = function () {
                 this.isChartVisible = !this.isChartVisible;
                 if (this.isChartVisible) {
-                    var statsChart = new Chart(app.Common.getElementById('mixed-chart'), {
+                    var statsChart = new Chart(app.Common.getCanvasContext('mixed-chart'), {
                         type: 'bar',
                         data: {
-                            labels: this.chartLabels,
+                            labels: this.chartSeries.labels,
                             datasets: [{
                                     label: "Puntos",
                                     type: "bar",
                                     //borderColor: "lightgray",
                                     //backgroundColor: "lightblue",                        
-                                    data: this.chartData[0],
+                                    data: this.chartSeries.points,
                                     yAxisID: "first-y-axis",
                                 },
                                 {
@@ -171,7 +168,7 @@ var app;
                                     borderColor: "black",
                                     backgroundColor: "white",
                                     pointBackgroundColor: 'red',
-                                    data: this.chartData[1],
+                                    data: this.chartSeries.goals,
                                     yAxisID: "first-y-axis"
                                 },
                                 {
@@ -179,7 +176,7 @@ var app;
                                     type: "line",
                                     borderColor: "red",
                                     backgroundColor: "tomato",
-                                    data: this.chartData[3],
+                                    data: this.chartSeries.lostGames,
                                     fill: true,
                                     yAxisID: "first-y-axis"
                                 },
@@ -188,7 +185,7 @@ var app;
                                     type: "line",
                                     borderColor: "orange",
                                     backgroundColor: "yellow",
-                                    data: this.chartData[4],
+                                    data: this.chartSeries.tiedGames,
                                     fill: true,
                                     yAxisID: "first-y-axis"
                                 },
@@ -197,7 +194,7 @@ var app;
                                     type: "line",
                                     borderColor: "green",
                                     backgroundColor: "lightgreen",
-                                    data: this.chartData[2],
+                                    data: this.chartSeries.wonGames,
                                     fill: true,
                                     yAxisID: "first-y-axis"
                                 }
@@ -219,7 +216,7 @@ var app;
                                         type: 'linear',
                                         position: "right",
                                         ticks: {
-                                            stepSize: 2
+                                        //stepSize: 2
                                         },
                                         scaleLabel: {
                                             labelString: "Goles",
@@ -242,7 +239,7 @@ var app;
             };
             TeamListCtrl.prototype.showChartSample = function () {
                 var barChartData = {
-                    labels: this.chartLabels,
+                    labels: this.chartSeries.labels,
                     datasets: [{
                             type: 'bubble',
                             label: 'Goles a Favor',
@@ -250,28 +247,28 @@ var app;
                             backgroundColor: "white",
                             borderWidth: 4,
                             pointRadius: 20,
-                            data: this.chartData[1]
+                            data: this.chartSeries.goals
                         }, {
                             type: 'bar',
                             label: 'P. Perdidos',
                             //borderColor: "red",
                             backgroundColor: "tomato",
-                            data: this.chartData[3]
+                            data: this.chartSeries.lostGames
                         }, {
                             type: 'bar',
                             label: 'P. Empatados',
                             //borderColor: "orange",
                             backgroundColor: "yellow",
-                            data: this.chartData[4]
+                            data: this.chartSeries.tiedGames
                         }, {
                             type: 'bar',
                             label: 'P. Ganados',
                             //borderColor: "green",
                             backgroundColor: "lightgreen",
-                            data: this.chartData[2]
+                            data: this.chartSeries.wonGames
                         }]
                 };
-                var myBar = new Chart(app.Common.getElementById('barChart'), {
+                var myBar = new Chart(app.Common.getCanvasContext('barChart'), {
                     type: 'bar',
                     data: barChartData,
                     options: {
@@ -303,18 +300,21 @@ var app;
             TeamListCtrl.prototype.toggleShowTeams = function (owner) {
                 owner.showTeams = !owner.showTeams;
             };
-            TeamListCtrl.prototype.playGame = function (homeTeam, awayTeam, game) {
+            TeamListCtrl.prototype.updateTeamStats = function (homeTeam, awayTeam, game) {
                 if (game.status != "TIMED") {
+                    homeTeam.eliminated = awayTeam.eliminated = false;
                     if (game.result.goalsHomeTeam > game.result.goalsAwayTeam) {
                         homeTeam.wonGames ? homeTeam.wonGames++ : homeTeam.wonGames = 1;
                         awayTeam.lostGames ? awayTeam.lostGames++ : awayTeam.lostGames = 1;
                         homeTeam.points += 3;
+                        awayTeam.eliminated = awayTeam.playedGames > 3;
                     }
                     else {
                         if (game.result.goalsAwayTeam > game.result.goalsHomeTeam) {
                             awayTeam.wonGames ? awayTeam.wonGames++ : awayTeam.wonGames = 1;
                             homeTeam.lostGames ? homeTeam.lostGames++ : homeTeam.lostGames = 1;
                             awayTeam.points += 3;
+                            homeTeam.eliminated = homeTeam.playedGames > 3;
                         }
                         else {
                             homeTeam.tiedGames ? homeTeam.tiedGames++ : homeTeam.tiedGames = 1;

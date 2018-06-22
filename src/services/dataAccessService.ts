@@ -2,14 +2,14 @@ module app.service{
     interface IDataAccessService{
         getGameResource():ng.resource.IResourceClass<IGameResource>;
         getTeamResource(): ng.resource.IResourceClass<ITeamResource>;
-        getOwnerResource(): ng.resource.IResourceClass<IWonerResource>;
+        getOwnerResource(): ng.resource.IResourceClass<IOwnerResource>;
     }
 
     interface IGameResource extends ng.resource.IResource<IFixture>{}
 
     interface ITeamResource extends ng.resource.IResource<IStanding>{}
 
-    interface IWonerResource extends ng.resource.IResource<IOwner>{}
+    interface IOwnerResource extends ng.resource.IResource<IOwner>{}
 
     export class DataAccessService 
         implements IDataAccessService{
@@ -43,7 +43,7 @@ module app.service{
                 return standing;
             }
 
-            getOwnerResource():ng.resource.IResourceClass<IWonerResource>{
+            getOwnerResource():ng.resource.IResourceClass<IOwnerResource>{
                 return this.$resource("src/app/owners/owners.json");
             }
         }
