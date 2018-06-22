@@ -9,6 +9,7 @@
 
             <thead>
             <tr>
+                <td>#</td>
                 <td>Fecha</td>
                 <td>Status</td>
                 <td class="text-right">Local</td>
@@ -18,6 +19,7 @@
             </thead>
             <tbody>
             <tr ng-class="{'breadcrumb': game.status == 'FINISHED','btn-warning': game.status == 'IN_PLAY'}" ng-repeat="game in vm.games | filter: vm.filterGames" ng-if="game.homeTeamName !='' ">
+                <td>{{$index + 1}}</td>
                 <td>
                     {{ game.date | date: "EEE MM/dd HH:mm" }}
                 </td>

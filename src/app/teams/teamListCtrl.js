@@ -9,6 +9,7 @@ var app;
                 this.$routeParams = $routeParams;
                 this.dataAccessService = dataAccessService;
                 this.games = [];
+                this.gamesFixed = [];
                 this.chartSeries = new app.ChartSeries();
                 this.isChartVisible = false;
                 this.ownerListCtrl = new app.ownerList.OwnerListCtrl(this.dataAccessService);
@@ -35,25 +36,30 @@ var app;
                 var gameResource = dataAccessService.getGameResource();
                 gameResource.get(function (data) {
                     _this.games = data.fixtures;
-                    _this.games.forEach(function (game) {
-                        if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "") {
-                            var homeTeam = _this.teams.filter(function (team) {
-                                return team.team == game.homeTeamName;
-                            })[0];
-                            var awayTeam = _this.teams.filter(function (team) {
-                                return team.team == game.awayTeamName;
-                            })[0];
-                            if (homeTeam && awayTeam) {
-                                _this.updateTeamStats(homeTeam, awayTeam, game);
+                    var gameFixedResource = dataAccessService.getGameFixedResource();
+                    gameFixedResource.get(function (dataFixed) {
+                        _this.gamesFixed = dataFixed.fixtures;
+                        app.Common.fixGames(_this.gamesFixed, _this.games);
+                        _this.games.forEach(function (game) {
+                            if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "") {
+                                var homeTeam = _this.teams.filter(function (team) {
+                                    return team.team == game.homeTeamName;
+                                })[0];
+                                var awayTeam = _this.teams.filter(function (team) {
+                                    return team.team == game.awayTeamName;
+                                })[0];
+                                if (homeTeam && awayTeam) {
+                                    _this.updateTeamStats(homeTeam, awayTeam, game);
+                                }
+                                else {
+                                    console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
+                                }
                             }
-                            else {
-                                console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
-                            }
-                        }
+                        });
+                        console.log("Games retrieved");
+                        _this.rankTeams();
+                        _this.calcOwnersResults(dataAccessService);
                     });
-                    console.log("Games retrieved");
-                    _this.rankTeams();
-                    _this.calcOwnersResults(dataAccessService);
                 });
             };
             TeamListCtrl.prototype.rankTeams = function () {

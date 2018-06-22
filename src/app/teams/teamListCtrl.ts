@@ -15,6 +15,7 @@ module app.teamList{
         teams: app.ITeam[];
         owners: app.IOwner[];
         games:app.IGame[] = [];
+        gamesFixed:app.IGame[] = [];
 
         chartSeries: app.ChartSeries = new app.ChartSeries();
         isChartVisible:boolean = false;
@@ -53,26 +54,34 @@ module app.teamList{
             gameResource.get((data: app.IFixture) => {
                 this.games = data.fixtures;
 
-                this.games.forEach((game) => {
-                    if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "" ){
-                        var homeTeam: app.ITeam = this.teams.filter((team) =>{
-                            return team.team == game.homeTeamName;
-                        })[0];
-                        var awayTeam: app.ITeam = this.teams.filter((team) =>{
-                            return team.team == game.awayTeamName;
-                        })[0];
+                var gameFixedResource = dataAccessService.getGameFixedResource();
+                gameFixedResource.get((dataFixed: app.IFixture) => {
+                    this.gamesFixed = dataFixed.fixtures;
 
-                        if (homeTeam && awayTeam){
-                            this.updateTeamStats(homeTeam, awayTeam,game);
-                        }else{
-                            console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
+                    Common.fixGames(this.gamesFixed, this.games);
+
+                    this.games.forEach((game) => {
+                        if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "" ){
+                            var homeTeam: app.ITeam = this.teams.filter((team) =>{
+                                return team.team == game.homeTeamName;
+                            })[0];
+                            var awayTeam: app.ITeam = this.teams.filter((team) =>{
+                                return team.team == game.awayTeamName;
+                            })[0];
+
+                            if (homeTeam && awayTeam){
+                                this.updateTeamStats(homeTeam, awayTeam,game);
+                            }else{
+                                console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
+                            }
                         }
-                    }
-                    
-                })
-                console.log("Games retrieved")
-                this.rankTeams();
-                this.calcOwnersResults(dataAccessService);
+                        
+                    })
+                    console.log("Games retrieved")
+                    this.rankTeams();
+                    this.calcOwnersResults(dataAccessService);
+
+                });
             });
 
         }

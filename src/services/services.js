@@ -2,6 +2,6 @@ var app;
 (function (app) {
     var service;
     (function (service) {
-        angular.module("servicesX", ["ngResource"]);
+        angular.module("services", ["ngResource"]);
     })(service = app.service || (app.service = {}));
 })(app || (app = {}));

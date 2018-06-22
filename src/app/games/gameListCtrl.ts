@@ -33,12 +33,18 @@ module app.gameList{
             gameResource.get((data: app.IFixture) => {
                 this.games = data.fixtures;
 
-                this.games.forEach((game)=>{
-                    game.awayOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.awayTeamName)>=0;})[0].ownerName;
-                    game.homeOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.homeTeamName)>=0;})[0].ownerName;
-                })
-            });
-            
+                var gameFixedResource = dataAccessService.getGameFixedResource();
+                gameFixedResource.get((dataFixed: app.IFixture) => {
+                    let gamesFixed = dataFixed.fixtures;
+
+                    Common.fixGames(gamesFixed, this.games);
+
+                    this.games.forEach((game)=>{
+                        game.awayOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.awayTeamName)>=0;})[0].ownerName;
+                        game.homeOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.homeTeamName)>=0;})[0].ownerName;
+                    })
+                });
+            });            
             Common.setButtonsReferences(this.price);
           
         }

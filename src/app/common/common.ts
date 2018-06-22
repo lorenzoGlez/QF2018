@@ -47,6 +47,25 @@ module app{
             return teams.filter((team) => {
                 return team.team == teamName;
             })[0].owner;
-        }        
+        }
+        
+        static fixGames(gamesFixed: IGame[], games: IGame[]){
+            gamesFixed.filter((game) => {return game.status !='TIMED';})
+                .forEach((gameFix) => {
+                    for (let i = 0; i < games.length; i++) {
+                        const game = games[i];
+                        if (gameFix.date == game.date 
+                            && gameFix.homeTeamName == game.homeTeamName 
+                            && gameFix.awayTeamName == game.awayTeamName){
+                                game.result.goalsAwayTeam = gameFix.result.goalsAwayTeam;
+                                game.result.goalsHomeTeam = gameFix.result.goalsHomeTeam;
+                                game.status = gameFix.status;
+                                i = games.length;
+                            }
+                    }
+
+                });
+        }
+
     }
 }

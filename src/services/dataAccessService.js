@@ -18,6 +18,12 @@ var app;
                 //return this.$resource("/src/app/games/convertcsv.json");
                 //return this.$resource("http://api.football-data.org/v1/competitions/467/fixtures");
             };
+            DataAccessService.prototype.getGameFixedResource = function () {
+                return this.$resource("https://jsonblob.com/api/jsonBlob/c947e059-7667-11e8-af14-f133ce27f174", {}, {
+                    get: { method: 'GET'
+                    }
+                });
+            };
             DataAccessService.prototype.getTeamResource = function () {
                 var standing = this.$resource("src/app/teams/teams.json");
                 /*standing.prototype.test = function(){

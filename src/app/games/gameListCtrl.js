@@ -19,9 +19,14 @@ var app;
                 var gameResource = dataAccessService.getGameResource();
                 gameResource.get(function (data) {
                     _this.games = data.fixtures;
-                    _this.games.forEach(function (game) {
-                        game.awayOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.awayTeamName) >= 0; })[0].ownerName;
-                        game.homeOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.homeTeamName) >= 0; })[0].ownerName;
+                    var gameFixedResource = dataAccessService.getGameFixedResource();
+                    gameFixedResource.get(function (dataFixed) {
+                        var gamesFixed = dataFixed.fixtures;
+                        app.Common.fixGames(gamesFixed, _this.games);
+                        _this.games.forEach(function (game) {
+                            game.awayOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.awayTeamName) >= 0; })[0].ownerName;
+                            game.homeOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.homeTeamName) >= 0; })[0].ownerName;
+                        });
                     });
                 });
                 app.Common.setButtonsReferences(this.price);

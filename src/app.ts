@@ -1,5 +1,5 @@
 module app{
-    var main = angular.module("fifa",["chart.js","ngRoute","servicesX"]);
+    var main = angular.module("fifa",["chart.js","ngRoute","services"]);
 
     main.config(routeConfig);
 
