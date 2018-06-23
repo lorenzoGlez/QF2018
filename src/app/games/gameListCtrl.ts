@@ -20,26 +20,36 @@ module app.gameList{
             this.games = [];
             this.price = this.$routeParams.price ? this.$routeParams.price : 400;
 
+            let fixingGames: boolean = this.price >= 0;
+            this.price = Math.abs(this.price);
+
             var ownerResource = dataAccessService.getOwnerResource();
             ownerResource.query((data:app.IOwner[]) =>{
                 
                 this.owners = data.filter((owner)=>{
                     return owner.quiniela == this.price;
-                });
+                });            
+
+
+                var gameResource = dataAccessService.getGameResource();
+                gameResource.get((data: app.IFixture) => {
+                    this.games = data.fixtures;
+
+                    var gameFixedResource = dataAccessService.getGameFixedResource();
+                    gameFixedResource.get((dataFixed: app.IFixture) => {
+                        let gamesFixed = dataFixed.fixtures;
+
+                        if(fixingGames){Common.fixGames(gamesFixed, this.games);}
+
+                        this.games.forEach((game)=>{
+                            game.awayOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.awayTeamName)>=0;})[0].ownerName;
+                            game.homeOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.homeTeamName)>=0;})[0].ownerName;
+                        })
+                    });
+                });            
+                Common.setButtonsReferences(this.price);
+
             });
-
-
-            var gameResource = dataAccessService.getGameResource();
-            gameResource.get((data: app.IFixture) => {
-                this.games = data.fixtures;
-
-                this.games.forEach((game)=>{
-                    game.awayOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.awayTeamName)>=0;})[0].ownerName;
-                    game.homeOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.homeTeamName)>=0;})[0].ownerName;
-                })
-            });
-            
-            Common.setButtonsReferences(this.price);
           
         }
 

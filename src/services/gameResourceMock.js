@@ -37,6 +37,11 @@ var app;
         $httpBackend.whenGET(/api/).respond(function (method, url, data) {
             return [200, game, {}];
         });
+        /*
+        $httpBackend.whenGET("https://api.football-data.org/v1/competitions/467/fixtures").respond(function(method, url, data) {
+            return [500, game, {}];
+        });
+        */
         // Pass through any requests for application files
         $httpBackend.whenGET(/app/).passThrough();
     }

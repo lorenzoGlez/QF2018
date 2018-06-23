@@ -14,6 +14,7 @@ module app{
         goalsAgainst: number;
         goalDifference: number;
         owner: string;
+        eliminated: boolean;
 
         //playGame(game: app.IGame){};
     }

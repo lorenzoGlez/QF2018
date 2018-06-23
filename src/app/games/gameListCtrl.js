@@ -10,21 +10,30 @@ var app;
                 this.title = "Juegos";
                 this.games = [];
                 this.price = this.$routeParams.price ? this.$routeParams.price : 400;
+                var fixingGames = this.price >= 0;
+                this.price = Math.abs(this.price);
                 var ownerResource = dataAccessService.getOwnerResource();
                 ownerResource.query(function (data) {
                     _this.owners = data.filter(function (owner) {
                         return owner.quiniela == _this.price;
                     });
-                });
-                var gameResource = dataAccessService.getGameResource();
-                gameResource.get(function (data) {
-                    _this.games = data.fixtures;
-                    _this.games.forEach(function (game) {
-                        game.awayOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.awayTeamName) >= 0; })[0].ownerName;
-                        game.homeOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.homeTeamName) >= 0; })[0].ownerName;
+                    var gameResource = dataAccessService.getGameResource();
+                    gameResource.get(function (data) {
+                        _this.games = data.fixtures;
+                        var gameFixedResource = dataAccessService.getGameFixedResource();
+                        gameFixedResource.get(function (dataFixed) {
+                            var gamesFixed = dataFixed.fixtures;
+                            if (fixingGames) {
+                                app.Common.fixGames(gamesFixed, _this.games);
+                            }
+                            _this.games.forEach(function (game) {
+                                game.awayOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.awayTeamName) >= 0; })[0].ownerName;
+                                game.homeOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.homeTeamName) >= 0; })[0].ownerName;
+                            });
+                        });
                     });
+                    app.Common.setButtonsReferences(_this.price);
                 });
-                app.Common.setButtonsReferences(this.price);
             }
             GameListCtrl.prototype.getTotalGames = function () {
                 //console.log(JSON.stringify(this.games));
