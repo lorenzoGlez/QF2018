@@ -10,6 +10,7 @@ var app;
                 this.dataAccessService = dataAccessService;
                 this.games = [];
                 this.gamesFixed = [];
+                this.errorTextAlert = "";
                 this.chartSeries = new app.ChartSeries();
                 this.isChartVisible = false;
                 this.ownerListCtrl = new app.ownerList.OwnerListCtrl(this.dataAccessService);
@@ -36,30 +37,47 @@ var app;
                 var gameResource = dataAccessService.getGameResource();
                 gameResource.get(function (data) {
                     _this.games = data.fixtures;
-                    var gameFixedResource = dataAccessService.getGameFixedResource();
-                    gameFixedResource.get(function (dataFixed) {
-                        _this.gamesFixed = dataFixed.fixtures;
-                        app.Common.fixGames(_this.gamesFixed, _this.games);
-                        _this.games.forEach(function (game) {
-                            if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "") {
-                                var homeTeam = _this.teams.filter(function (team) {
-                                    return team.team == game.homeTeamName;
-                                })[0];
-                                var awayTeam = _this.teams.filter(function (team) {
-                                    return team.team == game.awayTeamName;
-                                })[0];
-                                if (homeTeam && awayTeam) {
-                                    _this.updateTeamStats(homeTeam, awayTeam, game);
-                                }
-                                else {
-                                    console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
-                                }
+                }).$promise.then(function () {
+                    _this.combineFixData();
+                }).catch(function (error) {
+                    _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
+                    _this.combineFixData(true);
+                });
+            };
+            TeamListCtrl.prototype.combineFixData = function (replaceWholeFixData) {
+                var _this = this;
+                if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
+                var gameFixedResource = this.dataAccessService.getGameFixedResource();
+                gameFixedResource.get(function (dataFixed) {
+                    if (replaceWholeFixData) {
+                        _this.games = dataFixed.fixtures;
+                    }
+                    else {
+                        var gamesFixed = dataFixed.fixtures;
+                        var fixingGames = _this.price >= 0;
+                        if (fixingGames) {
+                            app.Common.fixGames(gamesFixed, _this.games);
+                        }
+                    }
+                    _this.games.forEach(function (game) {
+                        if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "") {
+                            var homeTeam = _this.teams.filter(function (team) {
+                                return team.team == game.homeTeamName;
+                            })[0];
+                            var awayTeam = _this.teams.filter(function (team) {
+                                return team.team == game.awayTeamName;
+                            })[0];
+                            if (homeTeam && awayTeam) {
+                                _this.updateTeamStats(homeTeam, awayTeam, game);
                             }
-                        });
-                        console.log("Games retrieved");
-                        _this.rankTeams();
-                        _this.calcOwnersResults(dataAccessService);
+                            else {
+                                console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
+                            }
+                        }
                     });
+                    console.log("Games retrieved");
+                    _this.rankTeams();
+                    _this.calcOwnersResults(_this.dataAccessService);
                 });
             };
             TeamListCtrl.prototype.rankTeams = function () {

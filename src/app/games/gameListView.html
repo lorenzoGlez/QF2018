@@ -1,4 +1,7 @@
 <div class="panel panel-primary" style="padding-top: 60px;">
+        <div class="alert alert-danger" ng-show="vm.errorTextAlert">
+                <strong>Alerta!</strong> {{vm.errorTextAlert}}
+        </div>
     <div class="panel-heading"
          style="font-size:large">{{::vm.title}} ({{vm.getTotalGames()}})
          <div style="float: right;"><input class="text-primary" type="text" ng-model="vm.filterGames" ></input> </div>

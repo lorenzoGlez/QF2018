@@ -16,6 +16,7 @@ module app.teamList{
         owners: app.IOwner[];
         games:app.IGame[] = [];
         gamesFixed:app.IGame[] = [];
+        errorTextAlert: string = "";
 
         chartSeries: app.ChartSeries = new app.ChartSeries();
         isChartVisible:boolean = false;
@@ -53,37 +54,48 @@ module app.teamList{
             var gameResource = dataAccessService.getGameResource();
             gameResource.get((data: app.IFixture) => {
                 this.games = data.fixtures;
-
-                var gameFixedResource = dataAccessService.getGameFixedResource();
-                gameFixedResource.get((dataFixed: app.IFixture) => {
-                    this.gamesFixed = dataFixed.fixtures;
-
-                    Common.fixGames(this.gamesFixed, this.games);
-
-                    this.games.forEach((game) => {
-                        if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "" ){
-                            var homeTeam: app.ITeam = this.teams.filter((team) =>{
-                                return team.team == game.homeTeamName;
-                            })[0];
-                            var awayTeam: app.ITeam = this.teams.filter((team) =>{
-                                return team.team == game.awayTeamName;
-                            })[0];
-
-                            if (homeTeam && awayTeam){
-                                this.updateTeamStats(homeTeam, awayTeam,game);
-                            }else{
-                                console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
-                            }
-                        }
-                        
-                    })
-                    console.log("Games retrieved")
-                    this.rankTeams();
-                    this.calcOwnersResults(dataAccessService);
-
-                });
+            }).$promise.then(()=>{
+                this.combineFixData();
+            }).catch((error) => {
+                this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
+                this.combineFixData(true);
             });
 
+        }
+
+        private combineFixData(replaceWholeFixData: boolean = false){
+            var gameFixedResource = this.dataAccessService.getGameFixedResource();
+            gameFixedResource.get((dataFixed: app.IFixture) => {
+                if (replaceWholeFixData){
+                    this.games=dataFixed.fixtures;
+                }else{
+                    let gamesFixed = dataFixed.fixtures;
+                    let fixingGames: boolean = this.price >= 0;
+
+                    if(fixingGames){Common.fixGames(gamesFixed, this.games);}
+                }
+
+                this.games.forEach((game) => {
+                    if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "" ){
+                        var homeTeam: app.ITeam = this.teams.filter((team) =>{
+                            return team.team == game.homeTeamName;
+                        })[0];
+                        var awayTeam: app.ITeam = this.teams.filter((team) =>{
+                            return team.team == game.awayTeamName;
+                        })[0];
+
+                        if (homeTeam && awayTeam){
+                            this.updateTeamStats(homeTeam, awayTeam,game);
+                        }else{
+                            console.log(game.homeTeamName + " or " + game.awayTeamName + " was/were not found in teams");
+                        }
+                    }
+                    
+                })
+                console.log("Games retrieved")
+                this.rankTeams();
+                this.calcOwnersResults(this.dataAccessService);
+            });
         }
 
         private rankTeams(){

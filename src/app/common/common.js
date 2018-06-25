@@ -42,10 +42,11 @@ var app;
             })[0].owner;
         };
         Common.fixGames = function (gamesFixed, games) {
+            var gamesToFix = games.filter(function (game) { return game.status != 'FINISHED'; });
             gamesFixed.filter(function (game) { return game.status != 'TIMED'; })
                 .forEach(function (gameFix) {
-                for (var i = 0; i < games.length; i++) {
-                    var game = games[i];
+                for (var i = 0; i < gamesToFix.length; i++) {
+                    var game = gamesToFix[i];
                     if (gameFix.date == game.date
                         && gameFix.homeTeamName == game.homeTeamName
                         && gameFix.awayTeamName == game.awayTeamName) {

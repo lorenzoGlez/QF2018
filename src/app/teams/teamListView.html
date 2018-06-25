@@ -1,4 +1,7 @@
-<div class="panel panel-primary">
+<div class="panel panel-primary" style="padding-top: 60px;">
+        <div class="alert alert-danger" ng-show="vm.errorTextAlert">
+                <strong>Alerta!</strong> {{vm.errorTextAlert}}
+        </div>
     <div class="panel-heading"
          style="font-size:large">{{::vm.title}}
     </div>

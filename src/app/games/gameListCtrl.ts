@@ -13,6 +13,7 @@ module app.gameList{
         games: app.IGame[];
         owners: app.IOwner[];
         price:  number;
+        errorTextAlert: string = "";
 
         static $inject=["$routeParams","dataAccessService"];
         constructor(private $routeParams: IGameParams, private dataAccessService: app.service.DataAccessService){
@@ -20,7 +21,7 @@ module app.gameList{
             this.games = [];
             this.price = this.$routeParams.price ? this.$routeParams.price : 400;
 
-            let fixingGames: boolean = this.price >= 0;
+            
             this.price = Math.abs(this.price);
 
             var ownerResource = dataAccessService.getOwnerResource();
@@ -30,27 +31,37 @@ module app.gameList{
                     return owner.quiniela == this.price;
                 });            
 
-
                 var gameResource = dataAccessService.getGameResource();
                 gameResource.get((data: app.IFixture) => {
                     this.games = data.fixtures;
-
-                    var gameFixedResource = dataAccessService.getGameFixedResource();
-                    gameFixedResource.get((dataFixed: app.IFixture) => {
-                        let gamesFixed = dataFixed.fixtures;
-
-                        if(fixingGames){Common.fixGames(gamesFixed, this.games);}
-
-                        this.games.forEach((game)=>{
-                            game.awayOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.awayTeamName)>=0;})[0].ownerName;
-                            game.homeOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.homeTeamName)>=0;})[0].ownerName;
-                        })
-                    });
+                }).$promise.then((value)=>{
+                    this.combineFixData();
+                }).catch((error) => {
+                    this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
+                    this.combineFixData(true);
                 });            
-                Common.setButtonsReferences(this.price);
-
             });
+            Common.setButtonsReferences(this.price);
           
+        }
+
+        private combineFixData(replaceWholeFixData: boolean = false){
+            var gameFixedResource = this.dataAccessService.getGameFixedResource();
+            gameFixedResource.get((dataFixed: app.IFixture) => {
+                if (replaceWholeFixData){
+                    this.games=dataFixed.fixtures;
+                }else{
+                    let gamesFixed = dataFixed.fixtures;
+                    let fixingGames: boolean = this.price >= 0;
+
+                    if(fixingGames){Common.fixGames(gamesFixed, this.games);}
+                }
+
+                this.games.forEach((game)=>{
+                    game.awayOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.awayTeamName)>=0;})[0].ownerName;
+                    game.homeOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.homeTeamName)>=0;})[0].ownerName;
+                })
+            });
         }
 
         getTotalGames():number{
