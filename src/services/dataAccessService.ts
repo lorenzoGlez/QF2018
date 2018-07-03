@@ -3,6 +3,7 @@ module app.service{
         getGameResource():ng.resource.IResourceClass<IGameResource>;
         getTeamResource(): ng.resource.IResourceClass<ITeamResource>;
         getOwnerResource(): ng.resource.IResourceClass<IOwnerResource>;
+        getPreferencesResource(): ng.resource.IResourceClass<IPreferencesResource>;
     }
 
     interface IGameResource extends ng.resource.IResource<IFixture>{}
@@ -10,6 +11,8 @@ module app.service{
     interface ITeamResource extends ng.resource.IResource<IStanding>{}
 
     interface IOwnerResource extends ng.resource.IResource<IOwner>{}
+
+    interface IPreferencesResource extends ng.resource.IResource<IPreferences>{}
 
     export class DataAccessService 
         implements IDataAccessService{
@@ -34,10 +37,12 @@ module app.service{
                 //return this.$resource("http://api.football-data.org/v1/competitions/467/fixtures");
             }
 
-            getGameFixedResource():ng.resource.IResourceClass<IGameResource>{
-                return this.$resource("https://jsonblob.com/api/jsonBlob/c947e059-7667-11e8-af14-f133ce27f174",{},{
-                    get:{method:'GET'
-                }});
+            getGameFixedResource(url:string):ng.resource.IResourceClass<IGameResource>{
+                //return this.$resource("https://jsonblob.com/api/jsonBlob/c947e059-7667-11e8-af14-f133ce27f174",{},{
+                //return this.$resource("https://quiniela-fifa-2018.firebaseio.com/x.json",{},{
+                return this.$resource(url,{},{
+                    get:{method:'GET'}
+                });
             }
 
             getTeamResource():ng.resource.IResourceClass<ITeamResource>{
@@ -50,6 +55,10 @@ module app.service{
 
             getOwnerResource():ng.resource.IResourceClass<IOwnerResource>{
                 return this.$resource("src/app/owners/owners.json");
+            }
+
+            getPreferencesResource():ng.resource.IResourceClass<IPreferencesResource>{
+                return this.$resource("https://quiniela-fifa-2018.firebaseio.com/Preferences.json")
             }
         }
         angular.module("fifa").service("dataAccessService", DataAccessService);

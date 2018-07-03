@@ -18,10 +18,11 @@ var app;
                 //return this.$resource("/src/app/games/convertcsv.json");
                 //return this.$resource("http://api.football-data.org/v1/competitions/467/fixtures");
             };
-            DataAccessService.prototype.getGameFixedResource = function () {
-                return this.$resource("https://jsonblob.com/api/jsonBlob/c947e059-7667-11e8-af14-f133ce27f174", {}, {
-                    get: { method: 'GET'
-                    }
+            DataAccessService.prototype.getGameFixedResource = function (url) {
+                //return this.$resource("https://jsonblob.com/api/jsonBlob/c947e059-7667-11e8-af14-f133ce27f174",{},{
+                //return this.$resource("https://quiniela-fifa-2018.firebaseio.com/x.json",{},{
+                return this.$resource(url, {}, {
+                    get: { method: 'GET' }
                 });
             };
             DataAccessService.prototype.getTeamResource = function () {
@@ -33,6 +34,9 @@ var app;
             };
             DataAccessService.prototype.getOwnerResource = function () {
                 return this.$resource("src/app/owners/owners.json");
+            };
+            DataAccessService.prototype.getPreferencesResource = function () {
+                return this.$resource("https://quiniela-fifa-2018.firebaseio.com/Preferences.json");
             };
             DataAccessService.apiToken = "393287c72ec0479186e4aabc20caab86";
             DataAccessService.$inject = ["$resource"];

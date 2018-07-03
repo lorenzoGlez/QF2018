@@ -50,11 +50,12 @@ module app{
         }
         
         static fixGames(gamesFixed: IGame[], games: IGame[]){
+            let gamesToFix = games.filter((game) => {return game.status != 'FINISHED';});
             gamesFixed.filter((game) => {return game.status !='TIMED';})
                 .forEach((gameFix) => {
-                    for (let i = 0; i < games.length; i++) {
-                        const game = games[i];
-                        if (gameFix.date == game.date 
+                    for (let i = 0; i < gamesToFix.length; i++) {
+                        const game = gamesToFix[i];
+                        if (gameFix.date.substring(0,10) == game.date.substring(0,10) 
                             && gameFix.homeTeamName == game.homeTeamName 
                             && gameFix.awayTeamName == game.awayTeamName){
                                 game.result.goalsAwayTeam = gameFix.result.goalsAwayTeam;
